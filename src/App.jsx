@@ -1,30 +1,32 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import About from './pages/About';
-import CampusTour from './pages/CampusTour';
-import Gallery from './pages/Gallery';
-import Academics from './pages/Academics';
-import Contact from './pages/Contact';
-import Admissions from './pages/Admissions';
-import ProgramDetail from './pages/ProgramDetail';
-import NotFound from './pages/NotFound';
+import Hero from './components/Hero';
+import About from './components/About';
+import CampusTour from './components/CampusTour';
+import Gallery from './components/Gallery';
+import Academics from './components/Academics';
+import Contact from './components/Contact';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/campus-tour" element={<CampusTour />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/academics" element={<Academics />} />
-        <Route path="/academics/:program" element={<ProgramDetail />} />
-        <Route path="/admissions" element={<Admissions />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="/" element={
+          <>
+            <Hero />
+            <About />
+            <CampusTour />
+            <Gallery />
+            <Academics />
+            <Contact />
+          </>
+        } />
+        <Route path="/admissions" element={<div className="min-h-screen bg-[#F8F9FF] py-20"><div className="container mx-auto px-4"><h1 className="text-4xl font-bold text-[#1B2E6E]">Admissions Page</h1></div></div>} />
+        <Route path="/academics/:program" element={<div className="min-h-screen bg-[#F8F9FF] py-20"><div className="container mx-auto px-4"><h1 className="text-4xl font-bold text-[#1B2E6E]">Program Detail</h1></div></div>} />
       </Routes>
     </BrowserRouter>
   );

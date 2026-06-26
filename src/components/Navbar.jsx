@@ -1,6 +1,6 @@
 // src/components/Navbar.jsx
 import React, { useState, useEffect, useRef } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import {
   Menu,
@@ -14,12 +14,12 @@ import logo from '../assets/sms_logo.png'
 
 // ─── Data ──────────────────────────────────────────────────────────────
 const navLinks = [
-  { path: '/', label: 'Home' },
-  { path: '/about', label: 'About' },
-  { path: '/campus-tour', label: 'Campus Tour' },
-  { path: '/gallery', label: 'Photo Gallery' },
-  { path: '/academics', label: 'Academic Programs', hasDropdown: true },
-  { path: '/contact', label: 'Contact' },
+  { id: 'home', label: 'Home', sectionId: 'home' },
+  { id: 'about', label: 'About', sectionId: 'about' },
+  { id: 'campus-tour', label: 'Campus Tour', sectionId: 'campus-tour' },
+  { id: 'gallery', label: 'Photo Gallery', sectionId: 'gallery' },
+  { id: 'academics', label: 'Academic Programs', sectionId: 'academics', hasDropdown: true },
+  { id: 'contact', label: 'Contact', sectionId: 'contact' },
 ];
 
 const academicPrograms = [
@@ -34,11 +34,23 @@ const academicPrograms = [
 // ─── Component ──────────────────────────────────────────────────────
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isAcademicsOpen, setIsAcademicsOpen] = useState(false); // mobile accordion
+  const [isAcademicsOpen, setIsAcademicsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hoverDropdown, setHoverDropdown] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   const dropdownTimeout = useRef(null);
   const location = useLocation();
+
+  // Smooth scroll function
+  const handleSmoothScroll = (e, sectionId) => {
+    e.preventDefault();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    setIsDrawerOpen(false);
+    setActiveSection(sectionId);
+  };
 
   // Scroll effects
   const { scrollY } = useScroll();
@@ -53,6 +65,29 @@ const Navbar = () => {
     });
     return () => unsubscribe();
   }, [scrollY]);
+
+  // Detect active section on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = ['home', 'about', 'campus-tour', 'gallery', 'academics', 'contact'];
+      const scrollPosition = window.scrollY + 100;
+
+      for (const sectionId of sections) {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          const offsetTop = element.offsetTop;
+          const offsetBottom = offsetTop + element.offsetHeight;
+          if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+            setActiveSection(sectionId);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Close drawer on route change
   useEffect(() => {
@@ -125,18 +160,34 @@ const Navbar = () => {
         }}
         className={`
           transition-shadow duration-300
-          ${isScrolled ? 'shadow-lg backdrop-blur-md' : 'shadow-none'}
+          ${isScrolled ? 'shadow-lg backdrop-blur-md' : 'shadow-md'}
+          bg-[#1B2E6E] /* Fallback background color */
         `}
       >
         <div className="container mx-auto px-4 flex items-center justify-between">
           {/* LEFT: Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
+          <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
             <motion.img
               src={logo}
               alt="SMS Logo"
               style={{ width: logoWidth }}
               className="rounded-full ring-2 ring-[#F5C518] shadow-md object-cover aspect-square"
             />
+            {/* School Name - Optional, uncomment if needed */}
+            {/* <div className="hidden sm:block leading-tight">
+              <h1 className="text-white font-bold text-lg tracking-wide">
+                The Student Model
+              </h1>
+              <div className="flex items-center gap-2">
+                <span className="h-[2px] w-6 bg-[#F5C518]"></span>
+                <span className="text-[#F5C518] italic text-xs font-medium">
+                  High School & College
+                </span>
+              </div>
+              <span className="text-[#1A8A6E] italic text-[11px] font-medium">
+                Akora Khattak
+              </span>
+            </div> */}
           </Link>
 
           {/* RIGHT: Desktop Nav */}
@@ -145,15 +196,16 @@ const Navbar = () => {
               if (link.hasDropdown) {
                 return (
                   <div
-                    key={link.path}
+                    key={link.id}
                     className="relative"
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                   >
                     <button
                       className={`
-                        flex items-center gap-1 font-medium text-[15px] tracking-wide
+                        flex items-center gap-1 text-white font-medium text-[15px] tracking-wide
                         hover:text-[#F5C518] transition-colors duration-200
+                        ${activeSection === link.sectionId ? 'text-[#F5C518]' : ''}
                       `}
                     >
                       {link.label}
@@ -176,17 +228,13 @@ const Navbar = () => {
                           <ul className="py-2">
                             {academicPrograms.map((prog) => (
                               <li key={prog.path}>
-                                <NavLink
+                                <Link
                                   to={prog.path}
-                                  className={({ isActive }) =>
-                                    `block px-4 py-2.5 text-white hover:bg-[#CC1F1F] transition-colors duration-150 flex items-center gap-2 ${
-                                      isActive ? 'bg-[#CC1F1F]' : ''
-                                    }`
-                                  }
+                                  className="block px-4 py-2.5 text-white hover:bg-[#CC1F1F] transition-colors duration-150 flex items-center gap-2"
                                 >
                                   <span className="text-[#F5C518]">▸</span>
                                   {prog.label}
-                                </NavLink>
+                                </Link>
                               </li>
                             ))}
                           </ul>
@@ -198,28 +246,25 @@ const Navbar = () => {
               }
 
               return (
-                <NavLink
-                  key={link.path}
-                  to={link.path}
-                  className={({ isActive }) =>
-                    `relative font-medium text-[15px] tracking-wide transition-colors duration-200 ${
-                      isActive ? 'text-[#F5C518]' : 'hover:text-[#F5C518]'
-                    }`
-                  }
+                <a
+                  key={link.id}
+                  href={`#${link.sectionId}`}
+                  onClick={(e) => handleSmoothScroll(e, link.sectionId)}
+                  className={`
+                    relative text-white font-medium text-[15px] tracking-wide transition-colors duration-200 cursor-pointer
+                    hover:text-[#F5C518]
+                    ${activeSection === link.sectionId ? 'text-[#F5C518]' : ''}
+                  `}
                 >
-                  {({ isActive }) => (
-                    <>
-                      {link.label}
-                      <motion.span
-                        className="absolute -bottom-1 left-0 h-[2px] bg-[#CC1F1F] w-full origin-left"
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: isActive ? 1 : 0 }}
-                        whileHover={{ scaleX: 1 }}
-                        transition={{ duration: 0.25, ease: 'easeOut' }}
-                      />
-                    </>
-                  )}
-                </NavLink>
+                  {link.label}
+                  <motion.span
+                    className="absolute -bottom-1 left-0 h-[2px] bg-[#CC1F1F] w-full origin-left"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: activeSection === link.sectionId ? 1 : 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ duration: 0.25, ease: 'easeOut' }}
+                  />
+                </a>
               );
             })}
 
@@ -240,7 +285,7 @@ const Navbar = () => {
           {/* Mobile: Hamburger */}
           <button
             onClick={toggleDrawer}
-            className="md:hidden p-1 focus:outline-none"
+            className="md:hidden text-white p-1 focus:outline-none"
             aria-label="Toggle menu"
           >
             <motion.div
@@ -267,7 +312,7 @@ const Navbar = () => {
                   {navLinks.map((link) => {
                     if (link.hasDropdown) {
                       return (
-                        <li key={link.path} className="border-b border-white/10 last:border-0">
+                        <li key={link.id} className="border-b border-white/10 last:border-0">
                           <button
                             onClick={() => setIsAcademicsOpen(!isAcademicsOpen)}
                             className="w-full flex items-center justify-between py-3 px-2 text-white text-base font-medium"
@@ -290,18 +335,12 @@ const Navbar = () => {
                               >
                                 {academicPrograms.map((prog) => (
                                   <li key={prog.path}>
-                                    <NavLink
+                                    <Link
                                       to={prog.path}
-                                      className={({ isActive }) =>
-                                        `block py-2.5 px-3 text-white text-sm hover:bg-[#CC1F1F]/20 hover:text-[#F5C518] transition-colors ${
-                                          isActive
-                                            ? 'bg-[#CC1F1F]/20 text-[#F5C518] border-l-4 border-[#CC1F1F]'
-                                            : ''
-                                        }`
-                                      }
+                                      className="block py-2.5 px-3 text-white text-sm hover:bg-[#CC1F1F]/20 hover:text-[#F5C518] transition-colors"
                                     >
                                       {prog.label}
-                                    </NavLink>
+                                    </Link>
                                   </li>
                                 ))}
                               </motion.ul>
@@ -312,19 +351,17 @@ const Navbar = () => {
                     }
 
                     return (
-                      <li key={link.path} className="border-b border-white/10 last:border-0">
-                        <NavLink
-                          to={link.path}
-                          className={({ isActive }) =>
-                            `block py-3 px-2 text-white text-base font-medium hover:bg-[#CC1F1F]/20 hover:text-[#F5C518] transition-colors ${
-                              isActive
-                                ? 'bg-[#CC1F1F]/20 text-[#F5C518] border-l-4 border-[#CC1F1F]'
-                                : ''
-                            }`
-                          }
+                      <li key={link.id} className="border-b border-white/10 last:border-0">
+                        <a
+                          href={`#${link.sectionId}`}
+                          onClick={(e) => handleSmoothScroll(e, link.sectionId)}
+                          className={`
+                            block py-3 px-2 text-white text-base font-medium hover:bg-[#CC1F1F]/20 hover:text-[#F5C518] transition-colors
+                            ${activeSection === link.sectionId ? 'bg-[#CC1F1F]/20 text-[#F5C518] border-l-4 border-[#CC1F1F]' : ''}
+                          `}
                         >
                           {link.label}
-                        </NavLink>
+                        </a>
                       </li>
                     );
                   })}
