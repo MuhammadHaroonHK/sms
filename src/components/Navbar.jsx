@@ -56,7 +56,7 @@ const Navbar = () => {
   const { scrollY } = useScroll();
   const navPaddingY = useTransform(scrollY, [0, 100], ['16px', '8px']);
   const bgOpacity = useTransform(scrollY, [0, 100], [1, 0.92]);
-  const logoWidth = useTransform(scrollY, [0, 100], ['3.5rem', '2.5rem']);
+  const logoWidth = useTransform(scrollY, [0, 100], ['2.5rem', '2.5rem']);
 
   // Detect scroll for backdrop blur
   useEffect(() => {
@@ -127,7 +127,7 @@ const Navbar = () => {
   // ─── Render ──────────────────────────────────────────────────────
 
   return (
-    <header className="sticky top-0 z-50 w-full">
+    <header className="sticky top-0 z-50 w-full border-b-2">
       {/* ── Top Info Bar ── */}
       <div className="hidden md:block bg-[#0D1B4B] py-1.5 border-b border-[#F5C518]/40">
         <div className="container mx-auto px-4 flex items-center justify-between text-xs text-white">
@@ -160,34 +160,18 @@ const Navbar = () => {
         }}
         className={`
           transition-shadow duration-300
-          ${isScrolled ? 'shadow-lg backdrop-blur-md' : 'shadow-md'}
-          bg-[#1B2E6E] /* Fallback background color */
+          ${isScrolled ? 'shadow-lg backdrop-blur-md' : 'shadow-none'}
         `}
       >
         <div className="container mx-auto px-4 flex items-center justify-between">
           {/* LEFT: Logo */}
-          <Link to="/" className="flex items-center gap-3 group flex-shrink-0">
+          <Link to="/" className="flex items-center gap-3 group">
             <motion.img
               src={logo}
               alt="SMS Logo"
               style={{ width: logoWidth }}
               className="rounded-full ring-2 ring-[#F5C518] shadow-md object-cover aspect-square"
             />
-            {/* School Name - Optional, uncomment if needed */}
-            {/* <div className="hidden sm:block leading-tight">
-              <h1 className="text-white font-bold text-lg tracking-wide">
-                The Student Model
-              </h1>
-              <div className="flex items-center gap-2">
-                <span className="h-[2px] w-6 bg-[#F5C518]"></span>
-                <span className="text-[#F5C518] italic text-xs font-medium">
-                  High School & College
-                </span>
-              </div>
-              <span className="text-[#1A8A6E] italic text-[11px] font-medium">
-                Akora Khattak
-              </span>
-            </div> */}
           </Link>
 
           {/* RIGHT: Desktop Nav */}
@@ -203,7 +187,7 @@ const Navbar = () => {
                   >
                     <button
                       className={`
-                        flex items-center gap-1 text-white font-medium text-[15px] tracking-wide
+                        flex items-center gap-1 font-medium text-[15px] tracking-wide
                         hover:text-[#F5C518] transition-colors duration-200
                         ${activeSection === link.sectionId ? 'text-[#F5C518]' : ''}
                       `}
@@ -251,7 +235,7 @@ const Navbar = () => {
                   href={`#${link.sectionId}`}
                   onClick={(e) => handleSmoothScroll(e, link.sectionId)}
                   className={`
-                    relative text-white font-medium text-[15px] tracking-wide transition-colors duration-200 cursor-pointer
+                    relative font-medium text-[15px] tracking-wide transition-colors duration-200 cursor-pointer
                     hover:text-[#F5C518]
                     ${activeSection === link.sectionId ? 'text-[#F5C518]' : ''}
                   `}
