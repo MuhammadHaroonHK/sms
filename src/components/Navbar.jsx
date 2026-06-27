@@ -269,7 +269,7 @@ const Navbar = () => {
           {/* Mobile: Hamburger */}
           <button
             onClick={toggleDrawer}
-            className="md:hidden text-white p-1 focus:outline-none"
+            className="md:hidden p-1 focus:outline-none"
             aria-label="Toggle menu"
           >
             <motion.div
