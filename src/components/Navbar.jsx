@@ -214,7 +214,7 @@ const Navbar = () => {
                               <li key={prog.path}>
                                 <Link
                                   to={prog.path}
-                                  className="block px-4 py-2.5 text-white hover:bg-[#CC1F1F] transition-colors duration-150 flex items-center gap-2"
+                                  className="block px-4 py-2.5 text-white hover:bg-[#CC1F1F] transition-colors duration-150 items-center gap-2"
                                 >
                                   <span className="text-[#F5C518]">▸</span>
                                   {prog.label}
