@@ -136,9 +136,9 @@ const Hero = () => {
               }}
               className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
             >
-              <span className="text-[#1B2E6E]">The Student Model</span>
+              <span className="text-[#1B2E6E]">Empowering Minds,</span>
               <br />
-              <span className="text-[#CC1F1F]">High School & College</span>
+              <span className="text-[#CC1F1F]">Building Futures</span>
             </motion.h1>
 
             {/* Divider */}
