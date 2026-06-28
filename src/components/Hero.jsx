@@ -141,15 +141,6 @@ const Hero = () => {
               <span className="text-[#CC1F1F]">Building Futures</span>
             </motion.h1>
 
-            {/* Divider */}
-            <motion.div
-              variants={{
-                hidden: { opacity: 0, scaleX: 0 },
-                visible: { opacity: 1, scaleX: 1 },
-              }}
-              className="w-24 h-1 bg-gradient-to-r from-[#F5C518] via-[#CC1F1F] to-[#1A8A6E] mx-auto rounded-full"
-            ></motion.div>
-
             {/* Subtitle */}
             <motion.p
               variants={{
@@ -169,7 +160,7 @@ const Hero = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              className="flex flex-wrap gap-4 pt-4 justify-center"
+              className="flex flex-wrap gap-4 pt-2 justify-center"
             >
               <a href="https://forms.gle/FNsJPoMdTtEwTp2MA" target="blank">
                 <motion.button
@@ -205,7 +196,7 @@ const Hero = () => {
                   },
                 },
               }}
-              className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-8 max-w-3xl mx-auto"
+              className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 max-w-3xl mx-auto"
             >
               {stats.map((stat, index) => (
                 <motion.div

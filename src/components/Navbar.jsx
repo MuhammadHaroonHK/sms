@@ -36,14 +36,23 @@ const Navbar = () => {
 
   // Smooth scroll function
   const handleSmoothScroll = (e, sectionId) => {
-    e.preventDefault();
+  e.preventDefault();
+
+  setIsDrawerOpen(false);
+
+  setTimeout(() => {
     const element = document.getElementById(sectionId);
+
     if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
-    setIsDrawerOpen(false);
+
     setActiveSection(sectionId);
-  };
+  }, 350); // Wait until drawer closes
+};
 
   // Scroll effects
   const { scrollY } = useScroll();

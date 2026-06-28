@@ -173,13 +173,6 @@ const Gallery = () => {
           >
             Photo Gallery
           </motion.h2>
-          <motion.div 
-            variants={{
-              hidden: { opacity: 0, scaleX: 0 },
-              visible: { opacity: 1, scaleX: 1 }
-            }}
-            className="w-24 h-1 bg-gradient-to-r from-[#F5C518] via-[#CC1F1F] to-[#1A8A6E] mx-auto rounded-full mt-4"
-          ></motion.div>
           <motion.p 
             variants={{
               hidden: { opacity: 0, y: 20 },

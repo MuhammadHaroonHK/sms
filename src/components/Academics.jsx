@@ -104,7 +104,6 @@ const SectionHeader = ({ title, subtitle }) => (
     <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1B2E6E] mt-2">
       {title}
     </h2>
-    <div className="w-24 h-1 bg-gradient-to-r from-[#F5C518] via-[#CC1F1F] to-[#1A8A6E] mx-auto rounded-full mt-4"></div>
     <p className="text-gray-600 max-w-2xl mx-auto mt-4 text-base md:text-lg leading-relaxed">
       {subtitle}
     </p>
