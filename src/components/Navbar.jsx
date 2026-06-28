@@ -20,21 +20,8 @@ const navLinks = [
     id: "academics",
     label: "Academic Programs",
     sectionId: "academics",
-    hasDropdown: true,
   },
   { id: "contact", label: "Contact", sectionId: "contact" },
-];
-
-const academicPrograms = [
-  { label: "Matric (Science)", path: "/academics/matric-science" },
-  { label: "Matric (Arts)", path: "/academics/matric-arts" },
-  { label: "Intermediate (Pre-Medical)", path: "/academics/inter-pre-medical" },
-  {
-    label: "Intermediate (Pre-Engineering)",
-    path: "/academics/inter-pre-engineering",
-  },
-  { label: "Intermediate (ICS)", path: "/academics/inter-ics" },
-  { label: "Intermediate (I.Com)", path: "/academics/inter-icom" },
 ];
 
 // ─── Component ──────────────────────────────────────────────────────
