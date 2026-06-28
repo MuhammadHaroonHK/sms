@@ -256,12 +256,14 @@ const Navbar = () => {
 
             {/* CTA Button */}
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.97 }}>
-              <Link
-                to="/admissions"
+              <a
+                href="https://forms.gle/KXg7MzBveJvhj83e7"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="hidden lg:inline-block bg-[#CC1F1F] text-white border border-[#F5C518] rounded-md px-4 py-2 font-semibold text-sm shadow-md hover:shadow-lg transition-shadow"
               >
                 Apply Now
-              </Link>
+              </a>
             </motion.div>
           </nav>
 
@@ -362,12 +364,14 @@ const Navbar = () => {
 
                 {/* Mobile CTA */}
                 <div className="mt-4 pb-4">
-                  <Link
-                    to="/admissions"
+                  <a
+                    href="https://forms.gle/KXg7MzBveJvhj83e7"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="block w-full bg-[#CC1F1F] text-white text-center font-semibold py-3 rounded-md border border-[#F5C518]"
                   >
                     Apply Now
-                  </Link>
+                  </a>
                 </div>
               </div>
             </motion.div>
