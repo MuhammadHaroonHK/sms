@@ -1,6 +1,7 @@
 // src/App.jsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Hero from './components/Hero';
 import About from './components/About';
 import CampusTour from './components/CampusTour';
@@ -28,6 +29,7 @@ function App() {
         <Route path="/admissions" element={<div className="min-h-screen bg-[#F8F9FF] py-20"><div className="container mx-auto px-4"><h1 className="text-4xl font-bold text-[#1B2E6E]">Admissions Page</h1></div></div>} />
         <Route path="/academics/:program" element={<div className="min-h-screen bg-[#F8F9FF] py-20"><div className="container mx-auto px-4"><h1 className="text-4xl font-bold text-[#1B2E6E]">Program Detail</h1></div></div>} />
       </Routes>
+      <Footer/>
     </BrowserRouter>
   );
 }
