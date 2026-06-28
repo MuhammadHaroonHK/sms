@@ -27,7 +27,9 @@ function App() {
           </>
         } />
         <Route path="/admissions" element={<div className="min-h-screen bg-[#F8F9FF] py-20"><div className="container mx-auto px-4"><h1 className="text-4xl font-bold text-[#1B2E6E]">Admissions Page</h1></div></div>} />
-        <Route path="/academics/:program" element={<div className="min-h-screen bg-[#F8F9FF] py-20"><div className="container mx-auto px-4"><h1 className="text-4xl font-bold text-[#1B2E6E]">Program Detail</h1></div></div>} />
+        <Route path='/About' element={<About/>} />
+        <Route path='/Academics' element={<Academics/>} />
+        <Route path='/Contact' element={<Contact/>} />
       </Routes>
       <Footer/>
     </BrowserRouter>
