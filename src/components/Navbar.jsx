@@ -177,7 +177,7 @@ const Navbar = () => {
             <motion.img
               src={logo}
               alt="SMS Logo"
-              className="w-44 object-cover"
+              className="w-36 lg:w-44 sm:w-20 max-h-9 object-fit"
             />
           </Link>
 
