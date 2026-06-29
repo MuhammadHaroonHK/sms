@@ -8,7 +8,7 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { Menu, X, MapPin, Phone, Mail, ChevronDown } from "lucide-react";
-import logo from "../assets/sms_logo.png";
+import logo from "../assets/banner.png";
 
 // ─── Data ──────────────────────────────────────────────────────────────
 const navLinks = [
@@ -58,7 +58,6 @@ const Navbar = () => {
   const { scrollY } = useScroll();
   const navPaddingY = useTransform(scrollY, [0, 100], ["16px", "8px"]);
   const bgOpacity = useTransform(scrollY, [0, 100], [1, 0.92]);
-  const logoWidth = useTransform(scrollY, [0, 100], ["2.5rem", "2.5rem"]);
 
   // Detect scroll for backdrop blur
   useEffect(() => {
@@ -178,8 +177,7 @@ const Navbar = () => {
             <motion.img
               src={logo}
               alt="SMS Logo"
-              style={{ width: logoWidth }}
-              className="rounded-full ring-2 ring-[#F5C518] shadow-md object-cover aspect-square"
+              className="w-44 shadow-md object-cover"
             />
           </Link>
 
