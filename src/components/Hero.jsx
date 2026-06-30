@@ -67,13 +67,13 @@ const Hero = () => {
   // Statistics data with counting configuration
   const stats = [
     {
-      number: 500,
+      number: 3000,
       label: "Students",
       color: "#1B2E6E",
       suffix: "+",
     },
     {
-      number: 30,
+      number: 250,
       label: "Faculty",
       color: "#CC1F1F",
       suffix: "+",
