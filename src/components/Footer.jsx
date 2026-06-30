@@ -42,7 +42,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              A premier educational institution dedicated to nurturing young minds with quality education, character development, and holistic growth since 1985.
+              A premier educational institution dedicated to nurturing young minds with quality education, character development, and holistic growth since 1997.
             </p>
           </motion.div>
 

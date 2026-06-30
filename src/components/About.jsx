@@ -13,7 +13,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import video from "../assets/sms_video.mp4";
+import video from "../assets/videos/sms_video.mp4";
 
 // ─── About Component ──────────────────────────────────────────────
 const About = () => {
@@ -80,7 +80,7 @@ const About = () => {
   // Milestones
   const milestones = [
     {
-      year: "1985",
+      year: "1997",
       title: "Foundation Laid",
       description:
         "The Student Model High School was established with a vision for quality education.",
@@ -179,7 +179,7 @@ const About = () => {
             }}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1B2E6E] mt-2"
           >
-            Shaping Futures Since 1985
+            Shaping Futures Since 1997
           </motion.h2>
           <motion.p
             variants={{
