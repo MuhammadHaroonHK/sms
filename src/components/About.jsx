@@ -11,14 +11,16 @@ import {
   School,
   Clock,
   ArrowRight,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import video from "../assets/videos/sms_video.mp4";
 
 // ─── About Component ──────────────────────────────────────────────
 const About = () => {
   const videoRef = useRef(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   // Core values
   const coreValues = [
@@ -110,15 +112,14 @@ const About = () => {
     if (!currentVideo) return;
 
     const observerOptions = {
-      root: null, // perspective view bound to viewport
-      threshold: 0.25, // Triggers when 25% or more of the video box is visible
+      root: null,
+      threshold: 0.25,
     };
 
     const handleIntersection = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           currentVideo.play().catch((error) => {
-            // Catches standard browser restrictions safely
             console.log(
               "Autoplay deferred until manual user interaction:",
               error,
@@ -139,7 +140,14 @@ const About = () => {
     return () => {
       if (currentVideo) observer.unobserve(currentVideo);
     };
-  }, [isVideoLoaded]);
+  }, []);
+
+  const handleMuteToggle = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    }
+  };
 
   return (
     <section
@@ -203,24 +211,54 @@ const About = () => {
             hidden: { opacity: 0, y: 30 },
             visible: { opacity: 1, y: 0 },
           }}
-          className="mb-16 max-w-4xl mx-auto"
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="mb-16 max-w-4xl mx-auto px-4"
         >
-          <div className="bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-gray-100">
-            <div className="relative aspect-video w-full h-full">
+          <div className="bg-slate-900 rounded-2xl overflow-hidden shadow-2xl border border-slate-800 relative group">
+            {/* Aspect Ratio Wrapper */}
+            <div className="relative aspect-video w-full h-full bg-black">
               <video
                 ref={videoRef}
-                className="w-full h-full object-cover"
-                muted
+                className={`w-full h-full object-cover transition-opacity duration-500 ${
+                  isVideoLoaded ? "opacity-100" : "opacity-0"
+                }`}
+                autoPlay
+                muted={isMuted}
                 playsInline
                 loop
                 controls
                 preload="metadata"
-                loading="lazy"
                 poster="https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=1000&auto=format&fit=crop"
                 onLoadedData={() => setIsVideoLoaded(true)}
               >
-                <source src={video} type="video/mp4" />
+                {/* Updated to point directly to your new MP4 file */}
+                <source src="/videos/sms_video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
               </video>
+
+              {/* Custom Floating Mute/Unmute Overlay Button */}
+              {isVideoLoaded && (
+                <button
+                  onClick={handleMuteToggle}
+                  className="absolute bottom-16 right-4 z-10 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full backdrop-blur-sm transition-all duration-200 shadow-md transform hover:scale-105"
+                  aria-label={isMuted ? "Unmute video" : "Mute video"}
+                  title={
+                    isMuted ? "Click to Unmute Promotional Audio" : "Mute Audio"
+                  }
+                >
+                  {isMuted ? (
+                    <div className="flex items-center gap-1.5 text-xs font-medium px-1">
+                      <VolumeX size={16} className="text-red-400" />
+                      <span>Tap for Sound</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-1.5 text-xs font-medium px-1">
+                      <Volume2 size={16} className="text-green-400" />
+                      <span>Mute</span>
+                    </div>
+                  )}
+                </button>
+              )}
             </div>
           </div>
         </motion.div>
