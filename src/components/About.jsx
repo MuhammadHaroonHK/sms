@@ -20,7 +20,6 @@ import { useEffect, useRef, useState } from "react";
 const About = () => {
   const videoRef = useRef(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
 
   // Core values
   const coreValues = [
@@ -142,13 +141,6 @@ const About = () => {
     };
   }, []);
 
-  const handleMuteToggle = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted;
-      setIsMuted(videoRef.current.muted);
-    }
-  };
-
   return (
     <section
       id="about"
@@ -223,42 +215,17 @@ const About = () => {
                   isVideoLoaded ? "opacity-100" : "opacity-0"
                 }`}
                 autoPlay
-                muted={isMuted}
+                muted // Static muted property keeps autoplay working safely across browsers
                 playsInline
                 loop
-                controls
+                controls // Browser default volume/mute buttons live perfectly here
                 preload="metadata"
                 poster="https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=1000&auto=format&fit=crop"
                 onLoadedData={() => setIsVideoLoaded(true)}
               >
-                {/* Updated to point directly to your new MP4 file */}
                 <source src="/videos/sms_video.mp4" type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
-
-              {/* Custom Floating Mute/Unmute Overlay Button */}
-              {isVideoLoaded && (
-                <button
-                  onClick={handleMuteToggle}
-                  className="absolute bottom-16 right-4 z-10 bg-black/70 hover:bg-black/90 text-white p-3 rounded-full backdrop-blur-sm transition-all duration-200 shadow-md transform hover:scale-105"
-                  aria-label={isMuted ? "Unmute video" : "Mute video"}
-                  title={
-                    isMuted ? "Click to Unmute Promotional Audio" : "Mute Audio"
-                  }
-                >
-                  {isMuted ? (
-                    <div className="flex items-center gap-1.5 text-xs font-medium px-1">
-                      <VolumeX size={16} className="text-red-400" />
-                      <span>Tap for Sound</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1.5 text-xs font-medium px-1">
-                      <Volume2 size={16} className="text-green-400" />
-                      <span>Mute</span>
-                    </div>
-                  )}
-                </button>
-              )}
             </div>
           </div>
         </motion.div>
