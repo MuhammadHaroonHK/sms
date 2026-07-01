@@ -8,7 +8,6 @@ import {
   AnimatePresence,
 } from "framer-motion";
 import { Menu, X, MapPin, Phone, Mail, ChevronDown } from "lucide-react";
-import logo from "../assets/banner.png";
 
 // ─── Data ──────────────────────────────────────────────────────────────
 const navLinks = [
@@ -175,7 +174,7 @@ const Navbar = () => {
           {/* LEFT: Logo */}
           <Link to="/" className="flex items-center gap-3 group">
             <motion.img
-              src={logo}
+              src='/sms_banner.webp'
               alt="SMS Logo"
               className="w-36 lg:w-44 sm:w-20 max-h-9 object-fit"
             />
