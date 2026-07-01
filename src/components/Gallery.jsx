@@ -33,11 +33,10 @@ const GalleryCard = memo(({ image, index, onSelect }) => {
 
   return (
     <div
-      onClick={() => onSelect(image)}
+      onClick={() => onSelect(index)}
       className="group relative overflow-hidden rounded-xl cursor-pointer bg-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 will-change-transform"
     >
       <div className="relative aspect-square overflow-hidden bg-gray-200">
-        {/* NATIVE IMG ELEMENT UTILIZING HARDWARE-ACCELERATED CSS CLASSES FOR HOVER */}
         <img
           src={image.image}
           alt={image.title}
@@ -78,15 +77,22 @@ GalleryCard.displayName = 'GalleryCard';
 
 // ─── Main Gallery Component ───────────────────────────────────────
 const Gallery = () => {
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const scrollContainerRef = useRef(null);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   const filteredImages = useMemo(() => {
     return selectedCategory === 'All' 
       ? galleryImages 
       : galleryImages.filter(img => img.category === selectedCategory);
   }, [selectedCategory]);
+
+  const activeImage = useMemo(() => {
+    if (selectedIndex === null) return null;
+    return filteredImages[selectedIndex] || null;
+  }, [selectedIndex, filteredImages]);
 
   const scrollLeft = useCallback(() => {
     if (scrollContainerRef.current) {
@@ -100,22 +106,56 @@ const Gallery = () => {
     }
   }, []);
 
-  const handleSelectImage = useCallback((image) => {
-    setSelectedImage(image);
+  const handleSelectImage = useCallback((index) => {
+    setSelectedIndex(index);
   }, []);
 
+  const handlePrevImage = useCallback((e) => {
+    if (e) e.stopPropagation();
+    setSelectedIndex((prev) => (prev !== null && prev > 0 ? prev - 1 : prev));
+  }, []);
+
+  const handleNextImage = useCallback((e) => {
+    if (e) e.stopPropagation();
+    setSelectedIndex((prev) => (prev !== null && prev < filteredImages.length - 1 ? prev + 1 : prev));
+  }, [filteredImages.length]);
+
+  // Handle Mobile Touch Swiping (GPU Efficient Native Touch Listeners)
+  const handleTouchStart = useCallback((e) => {
+    touchStartX.current = e.changedTouches[0].clientX;
+  }, []);
+
+  const handleTouchEnd = useCallback((e) => {
+    touchEndX.current = e.changedTouches[0].clientX;
+    const diffX = touchStartX.current - touchEndX.current;
+    const threshold = 50; // Minimum swipe distance in pixels
+
+    if (Math.abs(diffX) > threshold) {
+      if (diffX > 0) {
+        handleNextImage();
+      } else {
+        handlePrevImage();
+      }
+    }
+  }, [handleNextImage, handlePrevImage]);
+
+  // Handle Hotkeys (Esc, Left, Right Arrows)
   useEffect(() => {
-    const handleEsc = (e) => {
-      if (e.key === 'Escape') setSelectedImage(null);
+    const handleKeyDown = (e) => {
+      if (selectedIndex === null) return;
+      if (e.key === 'Escape') setSelectedIndex(null);
+      if (e.key === 'ArrowLeft') handlePrevImage();
+      if (e.key === 'ArrowRight') handleNextImage();
     };
-    window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, []);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedIndex, handlePrevImage, handleNextImage]);
 
+  // Prevent background scroll setup
   useEffect(() => {
-    document.body.style.overflow = selectedImage ? 'hidden' : 'unset';
+    document.body.style.overflow = selectedIndex !== null ? 'hidden' : 'unset';
     return () => { document.body.style.overflow = 'unset'; };
-  }, [selectedImage]);
+  }, [selectedIndex]);
 
   return (
     <section id="gallery" className="py-16 md:py-24 bg-white relative overflow-hidden">
@@ -201,18 +241,18 @@ const Gallery = () => {
 
         {/* Lightbox Modal */}
         <AnimatePresence>
-          {selectedImage && (
+          {activeImage && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 md:p-8"
+              className="fixed inset-0 z-[9999] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 md:p-8 select-none"
               style={{ 
                 paddingTop: 'calc(env(safe-area-inset-top, 0px) + 80px)',
                 paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 20px)'
               }}
-              onClick={() => setSelectedImage(null)}
+              onClick={() => setSelectedIndex(null)}
             >
               <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
@@ -221,23 +261,46 @@ const Gallery = () => {
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 className="relative max-w-5xl w-full bg-white rounded-2xl overflow-hidden shadow-2xl max-h-[90vh] md:max-h-[85vh]"
                 onClick={(e) => e.stopPropagation()}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
               >
                 {/* Close Button */}
                 <button
-                  onClick={() => setSelectedImage(null)}
+                  onClick={() => setSelectedIndex(null)}
                   className="absolute top-3 right-3 md:top-4 md:right-4 z-20 bg-black/60 hover:bg-black/80 backdrop-blur-sm text-white p-2 md:p-2.5 rounded-full transition-all duration-300 transform active:scale-95"
                 >
                   <X className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
 
+                {/* Desktop Left Navigation Arrow */}
+                {selectedIndex > 0 && (
+                  <button
+                    onClick={handlePrevImage}
+                    className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white p-3 rounded-full transition-all duration-200 active:scale-90"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                )}
+
+                {/* Desktop Right Navigation Arrow */}
+                {selectedIndex < filteredImages.length - 1 && (
+                  <button
+                    onClick={handleNextImage}
+                    className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white p-3 rounded-full transition-all duration-200 active:scale-90"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                )}
+
                 {/* Image Container */}
                 <div className="relative bg-[#1B2E6E] flex items-center justify-center" style={{ minHeight: '300px', maxHeight: '70vh' }}>
                   <img
-                    src={selectedImage.image}
-                    alt={selectedImage.title}
+                    key={activeImage.id} // Forces clean re-render for fluid tracking changes
+                    src={activeImage.image}
+                    alt={activeImage.title}
                     decoding="async"
                     loading="eager"
-                    className="w-full h-full max-h-[70vh] object-contain"
+                    className="w-full h-full max-h-[70vh] object-contain pointer-events-none"
                   />
                 </div>
 
@@ -245,13 +308,13 @@ const Gallery = () => {
                 <div className="p-4 md:p-6 bg-white">
                   <div className="flex flex-wrap items-center gap-2 md:gap-3 mb-2">
                     <span className="text-xs font-bold text-[#CC1F1F] bg-[#CC1F1F]/10 px-2.5 py-0.5 md:px-3 md:py-1 rounded-full">
-                      {selectedImage.category}
+                      {activeImage.category}
                     </span>
                     <span className="text-xs text-gray-400">•</span>
-                    <span className="text-xs text-gray-400">#{String(selectedImage.id).padStart(2, '0')}</span>
+                    <span className="text-xs text-gray-400">#{String(activeImage.id).padStart(2, '0')}</span>
                   </div>
-                  <h3 className="text-lg md:text-2xl font-bold text-[#1B2E6E]">{selectedImage.title}</h3>
-                  <p className="text-gray-500 text-sm md:text-base mt-1 md:mt-2">{selectedImage.description}</p>
+                  <h3 className="text-lg md:text-2xl font-bold text-[#1B2E6E]">{activeImage.title}</h3>
+                  <p className="text-gray-500 text-sm md:text-base mt-1 md:mt-2">{activeImage.description}</p>
                 </div>
               </motion.div>
             </motion.div>
